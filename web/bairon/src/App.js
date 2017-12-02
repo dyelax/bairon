@@ -11,8 +11,7 @@ class App extends Component {
 
     this.state = {
       poems: [
-        {title: 'untitled', text: 'bleooap bloop'},
-        {title: 'Do not go gentle into that good night', text: 'Rage, rage against the dying of the light'}
+        {title: 'untitled', text: ''},
       ]
     };
   };
@@ -29,6 +28,18 @@ class App extends Component {
     this.setState({poems: poems});
   };
 
+  addPoem = () => {
+    var poems = this.state.poems;
+    poems.push({title: 'untitled', text: ''});
+    this.setState({poems: poems})
+  };
+
+  deletePoem = (index) => {
+    var poems = this.state.poems;
+    poems.splice(index, 1);
+    this.setState({poems: poems});
+  };
+
   render() {
     return (
       <div className="App">
@@ -36,7 +47,9 @@ class App extends Component {
           <Poems 
             poems={this.state.poems}
             onPoemTitleChange={this.onPoemTitleChange}
-            onPoemTextChange={this.onPoemTextChange}/>
+            onPoemTextChange={this.onPoemTextChange}
+            addPoem={this.addPoem}
+            deletePoem={this.deletePoem}/>
         </div>
         <div className="App-right">
           <Logo/>

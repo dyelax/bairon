@@ -212,3 +212,9 @@
 .react-tabs__tab-panel--selected {
   display: block;
 }
+
+.plus-icon {
+  height: 24px;
+  width: 24px;
+  cursor: hover;
+}

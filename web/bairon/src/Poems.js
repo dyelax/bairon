@@ -1,16 +1,26 @@
 import React, { Component } from 'react';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import PoetryEditor from './PoetryEditor';
+import plus from './img/plus.svg';
+import x from './img/x.svg';
 
 class Poems extends Component {
 
   render() {
-    var tabTitles = this.props.poems.map(poem => {
-      return <Tab>{poem.title}</Tab>;
+    var deletePoem = this.props.deletePoem;
+    var tabTitles = this.props.poems.map((poem, i) => {
+      function deletePoemByEvent(e) {
+        deletePoem(i)
+      };
+
+      return (<Tab key={'tab'+i}>
+        {poem.title}
+        <img onClick={deletePoemByEvent} className="x-icon" src={x}></img>
+      </Tab>);
     });
 
     var tabContents = this.props.poems.map((poem, i) => {
-      return <TabPanel>
+      return <TabPanel key={'panel'+i}>
         <PoetryEditor 
           index={i}
           title={poem.title}
@@ -25,6 +35,7 @@ class Poems extends Component {
         <Tabs>
           <TabList>
             {tabTitles}
+            <img onClick={this.props.addPoem} className="plus-icon" src={plus}></img>
           </TabList>
 
           {tabContents}
