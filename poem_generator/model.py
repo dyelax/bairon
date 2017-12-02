@@ -83,7 +83,7 @@ class WordModel:
                                                         global_step=self.global_step,
                                                         name='train_op')
 
-    def generate(self, primer=None, max_words=100):
+    def generate(self, primer=None, max_words=100, save_path=None):
         """
         Generate a sequence of words given priming text.
 
@@ -132,6 +132,10 @@ class WordModel:
 
         print gen_seq
 
+        if save_path is not None:
+            with open(save_path, 'w') as f:
+                f.write(gen_seq)
+
     def train_step(self, inputs, targets):
         """
         Perform one training step on the model
@@ -160,6 +164,6 @@ class WordModel:
                             global_step=global_step)
 
         if (global_step - 1) % self.args.inference_freq == 0:
-            self.generate()
+            self.generate(save_path=os.path.join(self.args.save_dir, str(global_step) + '.txt'))
 
         return global_step
