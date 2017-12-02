@@ -5,7 +5,7 @@ class PoetryInput extends Component {
     return (
       <textarea 
         className="PoetryInput"
-        defaultValue={this.props.text}
+        value={this.props.text}
         onChange={this.props.change}>
       </textarea>
     );

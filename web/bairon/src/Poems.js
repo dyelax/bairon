@@ -5,8 +5,6 @@ import PoetryEditor from './PoetryEditor';
 class Poems extends Component {
 
   render() {
-    console.log(this.props.poems);
-
     var tabTitles = this.props.poems.map(poem => {
       return <Tab>{poem.title}</Tab>;
     });

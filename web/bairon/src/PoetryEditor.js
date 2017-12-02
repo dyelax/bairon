@@ -10,12 +10,9 @@ class PoetryEditor extends Component {
   };
 
   onTextChange = (a, b, c) => {
-    console.log(a);
-    console.log(b);
-    console.log(c);
-    // if (this.props.onTextChange) {
-    //   this.props.onTextChange(result.message, this.props.index);
-    // }
+    if (this.props.onTextChange) {
+      this.props.onTextChange(a.target.value, this.props.index);
+    }
   };
 
   render() {
