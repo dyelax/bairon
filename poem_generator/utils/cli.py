@@ -43,7 +43,15 @@ def parse_args():
                         type=int)
     parser.add_argument('--lr',
                         help='Learning rate',
-                        default=3e-5,
+                        default=1e-3,
+                        type=float)
+    parser.add_argument('--lr_decay_steps',
+                        help='The number of steps over which to decay by a multiple of lr_decay_rate',
+                        default=200,
+                        type=int)
+    parser.add_argument('--lr_decay_rate',
+                        help='The multiple by which to decay the learning rate every lr_decay_steps steps',
+                        default=0.9,
                         type=float)
     parser.add_argument('--keep_prob',
                         help='The keep probability for dropout (always 1 for testing)',

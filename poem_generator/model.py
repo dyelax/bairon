@@ -73,6 +73,10 @@ class WordModel:
                     logits=logits, labels=tf.reshape(self.targets, [-1]))) / self.args.seq_len
 
                 self.global_step = tf.Variable(0, trainable=False, name='global_step')
+
+                self.lr = tf.train.exponential_decay(
+                    self.args.lr, self.global_step, self.args.lr_decay_steps, self.args.lr_decay_rate)
+
                 self.optimizer = tf.train.AdamOptimizer(learning_rate=self.args.lr,
                                                         name='optimizer')
                 self.train_op = self.optimizer.minimize(self.loss,
@@ -143,12 +147,13 @@ class WordModel:
                      self.targets: targets,
                      self.initial_state: initial_state,
                      self.keep_prob: self.args.keep_prob}
-        global_step, loss, _ = self.sess.run([self.global_step,
+        global_step, loss, lr, _ = self.sess.run([self.global_step,
                                               self.loss,
+                                              self.lr,
                                               self.train_op],
                                              feed_dict=feed_dict)
 
-        print 'Step: %d | loss: %f' % (global_step, loss)
+        print 'Step: %d | lr: %f | loss: %f' % (global_step, lr, loss)
         if (global_step - 1) % self.args.model_save_freq == 0:
             print 'Saving model...'
             self.saver.save(self.sess, os.path.join(self.args.save_dir, 'model'),
