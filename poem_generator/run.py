@@ -24,7 +24,6 @@ def run(args):
         with open(args.data_reader_path, 'wb') as f:
             Pickler(f).dump(data_reader)
 
-    print vocab
     print 'Init model...'
     model = WordModel(args, vocab)
 
