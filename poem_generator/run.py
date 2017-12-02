@@ -12,12 +12,18 @@ def run(args):
         with open(args.data_reader_path, 'rb') as f:
             data_reader = Unpickler(f).load()
             print 'Loaded'
+
+            vocab = data_reader.get_vocab()
     else:
         print 'Creating data reader...'
         data_reader = DataReader(args.train_dir)
 
+        vocab = data_reader.get_vocab()
 
-    vocab = data_reader.get_vocab()
+        # Save the data reader
+        with open(args.data_reader_path, 'wb') as f:
+            Pickler(f).dump(data_reader)
+
     print vocab
     print 'Init model...'
     model = WordModel(args, vocab)
@@ -29,11 +35,6 @@ def run(args):
         while global_step < args.max_steps:
             inputs, targets = data_reader.get_train_batch(args.batch_size, args.seq_len)
             global_step = model.train_step(inputs, targets)
-
-    if not exists(args.data_reader_path):
-        # Save the data reader
-        with open(args.data_reader_path, 'wb') as f:
-            Pickler(f).dump(data_reader)
 
 
 if __name__ == '__main__':
