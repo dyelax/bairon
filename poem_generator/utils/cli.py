@@ -80,9 +80,13 @@ def parse_args():
     parser.add_argument('--inference',
                         help="Use the model to generate new text.",
                         action='store_true')
-    parser.add_argument('--max',
+    parser.add_argument('--argmax',
                         help="Use argmax to choose the next word, rather than sampling.",
                         action='store_true')
+    parser.add_argument('--max_gen_len',
+                        help="The maximum number of words to generate.",
+                        default=100,
+                        type=int)
     parser.add_argument('--primer',
                         help="The priming text to use for inference. Random if not supplied",
                         default=None)
