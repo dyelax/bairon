@@ -19,6 +19,16 @@ def parse_args():
     parser.add_argument('--load_path',
                         help='Path of the model checkpoint to load')
 
+    # Model Architecture
+    parser.add_argument('--cell_size',
+                        help='Minibatch size',
+                        default=256,
+                        type=int)
+    parser.add_argument('--num_layers',
+                        help='Minibatch size',
+                        default=3,
+                        type=int)
+
     # Hyperparams
     parser.add_argument('--batch_size',
                         help='Minibatch size',
