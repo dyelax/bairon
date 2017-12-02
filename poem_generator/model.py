@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 import os
 
-from utils.data_processing import unkify, clean_string
+from utils.data_processing import unkify, clean_string, postprocess
 
 class WordModel:
     def __init__(self, args, vocab, phonemes):
@@ -187,6 +187,7 @@ class WordModel:
 
             # TODO: break on newline
 
+        gen_seq = postprocess(gen_seq)
         print gen_seq
 
         if save_path is not None:
