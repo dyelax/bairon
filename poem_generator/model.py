@@ -5,10 +5,12 @@ import os
 from utils.data_processing import unkify, clean_string
 
 class WordModel:
-    def __init__(self, args, vocab):
+    def __init__(self, args, vocab, phonemes):
         self.args = args
         self.vocab = vocab
         self.vocab_size = len(self.vocab)
+        self.phonemes = phonemes
+        self.phoneme_vocab_size = len(self.phonemes)
 
         self.sess = tf.Session()
 
@@ -38,13 +40,13 @@ class WordModel:
                 # Fully connected layer from the output of the GRU
                 initializer = tf.contrib.layers.xavier_initializer()
                 self.ws = tf.get_variable(
-                    'ws', (self.args.cell_size, self.vocab_size), initializer=initializer)
+                    'ws', (self.args.cell_size, self.phoneme_vocab_size), initializer=initializer)
                 self.bs = tf.get_variable(
-                    'bs', (self.vocab_size,), initializer=initializer)
+                    'bs', (self.phoneme_vocab_size,), initializer=initializer)
 
                 with tf.device('/cpu:0'): # put on CPU to parallelize for faster training/
                     self.embeddings = tf.get_variable(
-                        'embeddings', [self.vocab_size, self.args.cell_size], initializer=initializer)
+                        'embeddings', [self.phoneme_vocab_size, self.args.cell_size], initializer=initializer)
 
                     # get embeddings for all input words
                     input_embeddings = tf.nn.embedding_lookup(self.embeddings, self.inputs)
@@ -83,7 +85,59 @@ class WordModel:
                                                         global_step=self.global_step,
                                                         name='train_op')
 
-    def generate(self, primer=None, max_words=100, save_path=None):
+    def generate_phonemes(self, primer=None, max_phonemes=200, save_path=None):
+        """
+        Generate a sequence of phonemes given priming text.
+
+        :param primer: An initial string of phonemes on which to condition the
+                       generated sequence.
+        :param max_phonemes: The maximum number of phonemes to generate.
+
+        :return: A sequence of generated phonemes.
+        """
+        if primer is None:
+            primer = np.random.choice(self.phonemes)
+
+        primer_is = [self.phonemes.index(word) for word in primer.split(' ')]
+
+        # Initialize state with primer
+        initial_state = self.sess.run(self.cell.zero_state(1, tf.float32))
+        feed_dict = {self.inputs: np.array([primer_is]),
+                     self.initial_state: initial_state,
+                     self.keep_prob: 1}
+        state = self.sess.run(self.gru_state, feed_dict=feed_dict)
+
+        # Generate sequence
+        gen_seq = primer
+        last_word_i = primer_is[-1]
+        for i in xrange(max_phonemes):
+            input = np.array([[last_word_i]])
+            feed_dict = {self.inputs: input,
+                         self.initial_state: state,
+                         self.keep_prob: 1}
+            probs, state = self.sess.run([self.probs, self.gru_state], feed_dict=feed_dict)
+
+            # select index of new word via argmax or sample
+            if self.args.max:
+                gen_phoneme_i = np.argmax(probs)
+            else:
+                gen_phoneme_i = np.random.choice(np.arange(len(probs)), p=probs)
+
+            # append new word to the generated sequence
+            gen_word = self.phonemes[gen_word_i]
+
+            gen_seq += ' ' + gen_word
+            last_word_i = gen_word_i
+
+            # TODO: break on newline
+
+        print gen_seq
+
+        if save_path is not None:
+            with open(save_path, 'w') as f:
+                f.write(gen_seq)
+
+    def generate_words(self, primer=None, max_words=100, save_path=None):
         """
         Generate a sequence of words given priming text.
 
@@ -164,6 +218,6 @@ class WordModel:
                             global_step=global_step)
 
         if (global_step - 1) % self.args.inference_freq == 0:
-            self.generate(save_path=os.path.join(self.args.save_dir, str(global_step) + '.txt'))
+            self.generate_phonemes(save_path=os.path.join(self.args.save_dir, str(global_step) + '.txt'))
 
         return global_step
