@@ -14,7 +14,11 @@ class PanelWidget extends Component {
         </p>
 
         {this.props.actionFunction && this.props.actionText &&
-          <button onClick={this.props.actionFunction}>{this.props.actionText}</button>
+          <button 
+            onClick={this.props.actionFunction}
+            className="widget-button">
+            {this.props.actionText}
+          </button>
         }
 
         {this.props.keyValuesData && 
@@ -22,7 +26,13 @@ class PanelWidget extends Component {
         }
 
         {this.props.searchLink && 
-          <a target="_blank" href={this.props.searchLink}>search...</a>
+          <p className="widget-body">
+            <a className="widget-search" 
+              target="_blank" 
+              href={this.props.searchLink}>
+                search...
+            </a>
+          </p>
         }
       </div>
     );

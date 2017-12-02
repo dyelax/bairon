@@ -18,7 +18,7 @@
 }
 
 .Logo {
-  padding: 24px;
+  margin: 24px;
   width: calc(100%-48px);
 }
 
@@ -30,7 +30,7 @@
 .Logo-slogan {
   font-family: Ubuntu;
   font-weight: 300;
-  font-size: 34px;
+  font-size: 30px;
   color: #5797C3;
   margin-top: 16px;
   margin-bottom: 16px;
@@ -47,6 +47,18 @@
   height: calc(100% - 48px);
   display: flex;
   flex-direction: column;
+}
+
+.PoemTitle {
+  margin-bottom: 16px;
+}
+
+.PoemTitle > input {
+  width: 100%;
+  outline: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
 }
 
 .BaironPanel {
@@ -88,6 +100,62 @@
   color: #5797C3;
 }
 
-.widget-title {
+.widget-body {
+  font-family: 'Roboto Mono', monospace;
+  font-style: light;
+  font-weight: 300;
+  line-height: 24px;
+  font-size: 16px;
+  color: #383838;
+}
+
+.widget-body .gray {
+  color: #bababa;
+}
+
+.widget-body.tight {
   margin: 0;
+}
+
+.widget-button {
+  width: 100%;
+  text-decoration:none;
+  margin-top: 16px;
+  margin-bottom: 16px;
+
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 24px;
+
+  color: #5797C3;
+  line-height:50px;
+
+  height: auto;
+  text-align:center;
+  border: 2px solid #5797C3;
+  -webkit-border-radius: 30px;
+  -moz-border-radius: 30px;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.widget-button:hover{
+  background-color:#5797C3;
+  color: white;
+}
+
+.widget-button:focus {
+  outline: 0;
+}
+
+.widget-search {
+  font-family: 'Roboto Mono', monospace;
+  font-style: italic;
+  font-weight: light;
+  font-size: 16px;
+  color: #383838;
+  text-decoration: none;
+}
+
+.widget-search:hover {
+  text-decoration: underline;
 }

@@ -1,16 +1,29 @@
 import React, { Component } from 'react';
 import PoetryInput from './PoetryInput';
+import InlineEdit from 'react-edit-inline';
 
 class PoetryEditor extends Component {
-  // todo: have the user set the title
   render() {
     return (
       <div className="PoetryEditor">
-        <h1 className="title">
-          Do not go gentle into that good night
-        </h1>
+        <div className="PoemTitle">
+          <InlineEdit
+            validate={this.customValidateText}
+            activeClassName="editing"
+            text={"untitled"}
+            paramName="message"
+            change={this.dataChanged}
+            style={{
+              fontFamily: 'Roboto',
+              fontStyle: 'normal',
+              fontWeight: 'bold',
+              lineHeight: 'normal',
+              fontSize: 36,
+              color: '#5797C3',
+            }}
+          />
+        </div>
         <PoetryInput/>
-        
       </div>
     );
   }
