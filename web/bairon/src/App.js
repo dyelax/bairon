@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PoetryEditor from './PoetryEditor';
+import Logo from './Logo';
+import BaironPanel from './BaironPanel';
 import './style/App.css';
-import logo from './img/logo.svg';
 
 class App extends Component {
   render() {
@@ -11,6 +12,8 @@ class App extends Component {
           <PoetryEditor/>
         </div>
         <div className="App-right">
+          <Logo/>
+          <BaironPanel/>
         </div>
       </div>
     );

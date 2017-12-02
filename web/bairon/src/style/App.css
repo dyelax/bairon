@@ -17,6 +17,31 @@
   float: right;
 }
 
+.Logo {
+  padding: 24px;
+  width: calc(100%-48px);
+}
+
+.Logo-img {
+  width: 300px;
+  max-width: 100%;
+}
+
+.Logo-slogan {
+  font-family: Ubuntu;
+  font-weight: 300;
+  font-size: 34px;
+  color: #5797C3;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.Logo-gradient {
+  height: 3px;
+  width: 100%;
+  background: linear-gradient(90deg, #5797C3 0%, #A362CD 100%);
+}
+
 .PoetryEditor {
   padding: 24px;
   height: calc(100% - 48px);
@@ -24,23 +49,10 @@
   flex-direction: column;
 }
 
-.PoetryEditor-title {
-  font-family: 'Roboto', sans-serif;
-  font-style: normal;
-  font-weight: bold;
-  line-height: normal;
-  font-size: 32px;
-  color: #5797C3;
+.BaironPanel {
+  padding: 24px;
+  padding-top: 0;
 }
-
-/*.PoetryEditor-body {
-  font-family: Roboto Mono;
-  font-style: normal;
-  font-weight: 300;
-  line-height: 34px;
-  font-size: 24px;
-  color: #383838;
-}*/ 
 
 .PoetryInput {
   overflow: auto;
@@ -65,4 +77,17 @@
 .PoetryInput:select {
   outline: none;
   -webkit-appearance:none;
+}
+
+.title {
+  font-family: 'Roboto', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  font-size: 32px;
+  color: #5797C3;
+}
+
+.widget-title {
+  margin: 0;
 }
