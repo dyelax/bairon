@@ -14,18 +14,20 @@ def run(args):
             print 'Loaded'
 
             vocab = data_reader.get_vocab()
+            phonemes = data_reader.get_phonemes()
     else:
         print 'Creating data reader...'
         data_reader = DataReader(args.train_dir)
 
         vocab = data_reader.get_vocab()
+        phonemes = data_reader.get_phonemes()
 
         # Save the data reader
         with open(args.data_reader_path, 'wb') as f:
             Pickler(f).dump(data_reader)
 
     print 'Init model...'
-    model = WordModel(args, vocab)
+    model = WordModel(args, vocab, phonemes)
 
     if args.inference:
         model.generate(primer=args.primer)

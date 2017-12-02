@@ -182,6 +182,9 @@ class WordModel:
             gen_seq += ' ' + gen_word
             last_word_i = gen_word_i
 
+            if last_word_i == "\n":
+                break
+
             # TODO: break on newline
 
         print gen_seq

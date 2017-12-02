@@ -2,11 +2,14 @@ import re
 import numpy as np
 import os
 import random
+import cPickle as pickle
 from string import punctuation
 from glob import glob
 from collections import Counter
 
 UNK_TOKEN = '*UNK*'
+ID_TO_PHONEMES = "utils/dicts/id_to_phoneme.txt"
+WORD_TO_PHONEME_IDS = "utils/dicts/word_to_phoneme_ids.txt"
 
 def unkify(string, vocab):
     """
@@ -72,6 +75,8 @@ class DataReader:
         self.lyric_indices = []
         self.vocab_lookup = {}
         self.vocab = []
+        self.phonemes = []
+        self.phonemes_lookup = {} # dict from word to list of phonemes
 
     def load_poems(self):
         """
@@ -82,6 +87,19 @@ class DataReader:
             with open(path, 'r') as poem:
                 words = clean_string(poem.read()).split(' ')
                 self.poems.append(words)
+
+    def get_phonemes(self):
+        """
+        @return: An array of unique phonemes used in the English language.
+        """
+        if self.phonemes:
+            return self.phonemes
+
+        with open(ID_TO_PHONEMES, "r") as f:
+            id_to_phonemes = pickle.load(f)
+
+        phonemes = [id_to_phonemes[i] for i in id_to_phonemes.keys()]
+        return phonemes
 
     def get_vocab(self):
         """
@@ -136,9 +154,15 @@ class DataReader:
         targets = np.empty([batch_size, seq_len], dtype=int)
 
         for i in xrange(batch_size):
-            input, target = self.get_seq(seq_len)
-            inputs[i] = input
+            inpt, target = self.get_phoneme_seq(seq_len)
+            inputs[i] = inpt
             targets[i] = target
+
+        # pad seqs to same length
+        max_len = max([len(seq) for seq in inputs])
+        for i in xrange(batch_size):
+            inputs[i] += [0 for _ in xrange(max_len - len(inputs[i]))]
+            targets[i] = [0 for _ in xrange(max_len - len(targets[i]))]
 
         return inputs, targets
 
@@ -160,3 +184,48 @@ class DataReader:
         inp = np.array(poem[i:i+seq_len], dtype=int)
         target = np.array(poem[i+1:i+seq_len+1], dtype=int)
         return inp, target
+
+    def load_phonemes_lookup(self):
+        """
+        @return: A dict from English word to a list of phonemes it contains.
+        """
+        with open(WORD_TO_PHONEME_IDS, "r") as f:
+            phonemes_lookup = pickle.load(f)
+        return phonemes_lookup
+
+    def get_phoneme_seq(self, seq_len):
+        """
+        Gets a pair of word sequences (input, target) of seq_len number of words,
+        and returns the sequences as phonemes. Pads these sequences so they are the
+        same length.
+
+        @param seq_len: The number of words the sequence of phonemes corresponds to.
+
+        @return: A tuple of sequences, (input, target) offset from each other by one phoneme.
+        """
+        # Pick a random poem. Must be longer than seq_len
+        for i in xrange(1000):  # cap at 1000 tries
+            poem = random.choice(self.poems)
+            if len(poem) > seq_len: break
+
+        # get mapping from words to phonemes
+        phonemes_lookup = self.load_phonemes_lookup()
+
+        # Take a sequence of (seq_len) from the poem
+        i = random.randint(0, len(poem) - (seq_len + 1))
+
+        inp = poem[i:i+seq_len]
+        inp = [list(phonemes_lookup[word]) if word in phonemes_lookup else UNK_TOKEN for word in inp]
+        # flatten into lists of phonemes (as ids)
+        inp = [item for item in sublist for sublist in inp]
+        print inp
+
+        target = poem[i+1:seq_len+1]
+        target = [list(phonemes_lookup[word]) for word in target]
+        target = [item for item in sublist for sublist in target]
+
+        return seq
+
+
+
+
