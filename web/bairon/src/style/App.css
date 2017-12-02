@@ -1,0 +1,68 @@
+.App {
+  background-color: #fff;
+  width: calc(100% - 32px);
+  height: calc(100vh - 32px);
+  margin: 16px;
+}
+
+.App-left {
+  width: 700px;
+  height: 100%;
+  float: left;
+}
+
+.App-right {
+  width: calc(100% - 700px);
+  height: 100%;
+  float: right;
+}
+
+.PoetryEditor {
+  padding: 24px;
+  height: calc(100% - 48px);
+  display: flex;
+  flex-direction: column;
+}
+
+.PoetryEditor-title {
+  font-family: 'Roboto', sans-serif;
+  font-style: normal;
+  font-weight: bold;
+  line-height: normal;
+  font-size: 32px;
+  color: #5797C3;
+}
+
+/*.PoetryEditor-body {
+  font-family: Roboto Mono;
+  font-style: normal;
+  font-weight: 300;
+  line-height: 34px;
+  font-size: 24px;
+  color: #383838;
+}*/ 
+
+.PoetryInput {
+  overflow: auto;
+  outline: none;
+
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+
+  width: 100%;
+  border: none;
+  flex: 1 0 auto;
+  resize: none;
+  font-family: 'Roboto Mono', monospace;
+  font-style: light;
+  font-weight: 300;
+  line-height: 24px;
+  font-size: 16px;
+  color: #383838;
+}
+
+.PoetryInput:select {
+  outline: none;
+  -webkit-appearance:none;
+}

@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
-import './App.css';
+import PoetryEditor from './PoetryEditor';
+import './style/App.css';
+import logo from './img/logo.svg';
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <h1 className="App-title">Bairon</h1>
-        </header>
-        <p className="App-intro">
-          Do not go gentle into that good night.
-        </p>
+        <div className="App-left">
+          <PoetryEditor/>
+        </div>
+        <div className="App-right">
+        </div>
       </div>
     );
   }
