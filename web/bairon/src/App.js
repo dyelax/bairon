@@ -12,7 +12,8 @@ class App extends Component {
     this.state = {
       poems: [
         {title: 'untitled', text: ''},
-      ]
+      ],
+      currentPoem: 0
     };
   };
 
@@ -46,6 +47,7 @@ class App extends Component {
         <div className="App-left">
           <Poems 
             poems={this.state.poems}
+            currentPoem={this.state.currentPoem}
             onPoemTitleChange={this.onPoemTitleChange}
             onPoemTextChange={this.onPoemTextChange}
             addPoem={this.addPoem}
@@ -53,7 +55,9 @@ class App extends Component {
         </div>
         <div className="App-right">
           <Logo/>
-          <BaironPanel/>
+          <BaironPanel
+            seed={this.state.poems[this.state.currentPoem]['text']}
+          />
         </div>
       </div>
     );

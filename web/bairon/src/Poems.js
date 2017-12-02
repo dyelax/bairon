@@ -8,6 +8,7 @@ class Poems extends Component {
 
   render() {
     var deletePoem = this.props.deletePoem;
+    var currentPoem = this.props.currentPoem;
     var tabTitles = this.props.poems.map((poem, i) => {
       function deletePoemByEvent(e) {
         deletePoem(i)
@@ -21,7 +22,8 @@ class Poems extends Component {
 
     var tabContents = this.props.poems.map((poem, i) => {
       return <TabPanel key={'panel'+i}>
-        <PoetryEditor 
+        <PoetryEditor
+          focused={currentPoem == i}
           index={i}
           title={poem.title}
           text={poem.text}

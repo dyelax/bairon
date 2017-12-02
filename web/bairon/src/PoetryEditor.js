@@ -16,10 +16,12 @@ class PoetryEditor extends Component {
   };
 
   render() {
+    console.log(this.props.focused);
     return (
       <div className="PoetryEditor">
         <div className="PoemTitle">
           <InlineEdit
+            className="inline-edit"
             activeClassName="editing"
             text={this.props.title}
             paramName="message"

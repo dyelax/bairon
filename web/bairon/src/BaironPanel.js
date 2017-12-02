@@ -2,9 +2,37 @@ import React, { Component } from 'react';
 import PanelWidget from './PanelWidget';
 
 class BaironPanel extends Component {
-  actionFunction = () => {
-    console.log('hello there');
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      baironIdeas: 'Start typing to seed the generator!',
+    }
+  };
+
+  generateBaironIdeas = () => {
+    if (this.props.seed) {
+      // return bairon ideas generated based on the seed
+      this.setState({baironIdeas: 'Do not go gentle into that good night'});
+    } else {
+      // return bairon ideas generated randomly
+      this.setState({baironIdeas: 'Rage, rage against the dying of the light'});
+    }
   }
+
+  // getBaironActionText = () => {
+  //   if (this.props.seed) {
+  //     return 'generate new';
+  //   }
+  //   return 'bairon, inspire me';
+  // };
+
+  // getBaironIdeas = () => {
+  //   if (this.props.seed) {
+  //     return 'Grave men, near death, who see with blinding sight...';
+  //   }
+  //   return 'Start typing to seed the generator!'
+  // };
 
   render() {
     var rhymeKeyValues = {
@@ -21,13 +49,17 @@ class BaironPanel extends Component {
       <div className="BaironPanel">
         <PanelWidget 
           title="bairon's ideas..." 
-          text="Grave men, near death, who see with blinding sight / Blind eyes could blaze like meteors and be gay, / Rage, rage against the dying of the light."
-          actionFunction={this.actionFunction}
-          actionText="generate more"/>
+          text={this.state.baironIdeas}
+          actionFunction={this.generateBaironIdeas}
+          actionText={this.props.seed ? 'generate new' : 'bairon, inspire me'}/>
         <PanelWidget 
           title="thesaurus" 
           keyValuesData={thesaurusKeyValues}
           searchLink="http://www.thesaurus.com/"/>
+        <PanelWidget 
+          title="rhyme dictionary" 
+          keyValuesData={rhymeKeyValues}
+          searchLink="http://www.rhymezone.com/"/>
       </div>
     );
   }
