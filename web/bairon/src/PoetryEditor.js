@@ -16,7 +16,6 @@ class PoetryEditor extends Component {
   };
 
   render() {
-    console.log(this.props.focused);
     return (
       <div className="PoetryEditor">
         <div className="PoemTitle">

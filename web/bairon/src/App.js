@@ -32,7 +32,7 @@ class App extends Component {
   addPoem = () => {
     var poems = this.state.poems;
     poems.push({title: 'untitled', text: ''});
-    this.setState({poems: poems})
+    this.setState({poems: poems, currentPoem: poems.length-1})
   };
 
   deletePoem = (index) => {
@@ -41,6 +41,10 @@ class App extends Component {
     this.setState({poems: poems});
   };
 
+  selectPoem = (index) => {
+    this.setState({currentPoem: index});
+  }
+
   render() {
     return (
       <div className="App">
@@ -48,6 +52,7 @@ class App extends Component {
           <Poems 
             poems={this.state.poems}
             currentPoem={this.state.currentPoem}
+            onSelectPoem={this.selectPoem}
             onPoemTitleChange={this.onPoemTitleChange}
             onPoemTextChange={this.onPoemTextChange}
             addPoem={this.addPoem}
