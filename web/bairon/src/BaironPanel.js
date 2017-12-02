@@ -4,35 +4,22 @@ import PanelWidget from './PanelWidget';
 class BaironPanel extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      baironIdeas: 'Start typing to seed the generator!',
+      generateRandomly: false
     }
   };
 
-  generateBaironIdeas = () => {
+  generateIdeas = () => {
     if (this.props.seed) {
-      // return bairon ideas generated based on the seed
-      this.setState({baironIdeas: 'Do not go gentle into that good night'});
+      return 'Do not go gentle into that good night';
     } else {
-      // return bairon ideas generated randomly
-      this.setState({baironIdeas: 'Rage, rage against the dying of the light'});
+      return 'Rage, rage against the dying of the light';
     }
   }
 
-  // getBaironActionText = () => {
-  //   if (this.props.seed) {
-  //     return 'generate new';
-  //   }
-  //   return 'bairon, inspire me';
-  // };
-
-  // getBaironIdeas = () => {
-  //   if (this.props.seed) {
-  //     return 'Grave men, near death, who see with blinding sight...';
-  //   }
-  //   return 'Start typing to seed the generator!'
-  // };
+  setGenerateRandomly = () => {
+    this.setState({generateRandomly: true});
+  }
 
   render() {
     var rhymeKeyValues = {
@@ -49,9 +36,9 @@ class BaironPanel extends Component {
       <div className="BaironPanel">
         <PanelWidget 
           title="bairon's ideas..." 
-          text={this.state.baironIdeas}
-          actionFunction={this.generateBaironIdeas}
-          actionText={this.props.seed ? 'generate new' : 'bairon, inspire me'}/>
+          text={this.props.seed || this.state.generateRandomly ? this.generateIdeas() : 'Start typing to seed the generator!'}
+          actionFunction={this.props.seed || this.state.generateRandomly ? this.generateIdeas : this.setGenerateRandomly}
+          actionText={this.props.seed || this.state.generateRandomly ? 'generate new' : 'bairon, inspire me'}/>
         <PanelWidget 
           title="thesaurus" 
           keyValuesData={thesaurusKeyValues}
