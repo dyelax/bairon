@@ -4,8 +4,6 @@ import PanelWidget from './PanelWidget';
 class BaironPanel extends Component {
 
   render() {
-    console.log(this.props.rhyme);
-
     return (
       <div className="BaironPanel">
         <PanelWidget 

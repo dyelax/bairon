@@ -1,0 +1,7 @@
+body.dark {
+  background-color: #000;
+}
+
+body.dark App-left, body.dark App-right {
+  background-color: #3B3B3B !important;
+}

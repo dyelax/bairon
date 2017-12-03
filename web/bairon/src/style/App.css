@@ -7,7 +7,7 @@
 
 .App-left {
   background-color: #fff;
-  width: 684px;
+  width: calc(50% - 8px);
   height: 100%;
   float: left;
   display: flex;
@@ -16,8 +16,7 @@
 
 .App-right {
   background-color: #fff;
-  width: calc(100% - 700px);
-  min-width: 320px;
+  width: calc(50% - 8px);
   height: calc(100% - 44px);
   float: right;
   display: flex;
@@ -26,22 +25,23 @@
 }
 
 .Logo {
-  margin: 24px;
+  margin: 40px;
+  margin-bottom: 0;
   width: calc(100%-48px);
 }
 
 .Logo-img {
-  width: 300px;
+  width: 200px;
   max-width: 100%;
 }
 
 .Logo-slogan {
   font-family: Ubuntu;
   font-weight: 300;
-  font-size: 30px;
+  font-size: 20px;
   color: #5797C3;
   margin-top: 16px;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
 }
 
 .Logo-gradient {
@@ -57,7 +57,7 @@
 }
 
 .PoetryEditor {
-  padding: 24px;
+  padding: 40px;
   height: calc(100% - 48px);
   flex: 1 0 auto;
   display: flex;
@@ -77,8 +77,8 @@
 }
 
 .BaironPanel {
-  padding: 24px;
-  padding-top: 0;
+  margin: 40px;
+  margin-top: 0px;
   overflow: scroll;
 }
 
@@ -100,6 +100,9 @@
   line-height: 24px;
   font-size: 16px;
   color: #383838;
+
+  white-space:nowrap;
+  overflow: auto;
 }
 
 .PoetryInput:select {
@@ -220,7 +223,7 @@
 .react-tabs__tab-list {
   /*border-bottom: 1px solid #aaa;*/
   background-color: #e8e8e8;
-  margin: 0 0 10px;
+  margin: 0;
   padding: 0;
 }
 

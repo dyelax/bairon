@@ -4,6 +4,7 @@ import Logo from './Logo';
 import BaironPanel from './BaironPanel';
 
 import './style/App.css';
+import './style/dark.css';
 
 class App extends Component {
   constructor(props) {
@@ -37,9 +38,12 @@ class App extends Component {
   };
 
   onSelectionChange = selection => {
+    selection = selection.split(' ')[0];
     this.setState({selection: selection});
-    this.updateRhyme(selection);
-    this.updateThesaurus(selection);
+    if (selection !== '') {
+      this.updateRhyme(selection);
+      this.updateThesaurus(selection);
+    }
   }
 
   addPoem = () => {
