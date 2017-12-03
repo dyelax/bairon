@@ -100,8 +100,8 @@ class App extends Component {
     })
     .then(response => {
       let now = new Date();
-      if (now - then > 3000) {
-        this.sleep(3000);
+      if (now - then > 1000) {
+        this.sleep(1000);
       }
       return response.json()
     }).then(responseJSON => {
@@ -146,8 +146,8 @@ class App extends Component {
 
     promise.then(response => {
       let now = new Date();
-      if (now - then > 3000) {
-        this.sleep(3000);
+      if (now - then > 1000) {
+        this.sleep(1000);
       }
       return response.json()
     }).then(responseJSON => {
@@ -192,8 +192,8 @@ class App extends Component {
 
     promise.then(response => {
       let now = new Date();
-      if (now - then > 3000) {
-        this.sleep(3000);
+      if (now - then > 1000) {
+        this.sleep(1000);
       }
       return response.json()
     }).then(responseJSON => {
