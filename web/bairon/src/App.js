@@ -39,7 +39,7 @@ class App extends Component {
   onSelectionChange = selection => {
     this.setState({selection: selection});
     this.updateRhyme(selection);
-    // this.updateThesaurus(selection);
+    this.updateThesaurus(selection);
   }
 
   addPoem = () => {

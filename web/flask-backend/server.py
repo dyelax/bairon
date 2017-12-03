@@ -2,15 +2,14 @@ from flask import Flask, request
 import re, string, json, requests, random
 from flask_cors import CORS
 from datamuse import datamuse
+from PyDictionary import PyDictionary
 
 app = Flask(__name__)
 app.config.from_envvar('BAIRON_SETTINGS')
 CORS(app)
 
-oxford_app_id = 'f17ea4d6'
-oxford_app_key = app.config['OXFORD_APP_KEY']
-language = 'en'
 datamuse_api = datamuse.Datamuse()
+dictionary_api = PyDictionary()
 
 @app.route('/bairon', methods=['POST'])
 def bairon():
@@ -46,21 +45,7 @@ def thesaurus_word(word):
   return json.dumps(result)
 
 def thesaurus_helper(word):
-  url = 'https://od-api.oxforddictionaries.com:443/api/v1/entries/en/' + \
-    word.lower() + '/synonyms'
-  r = requests.get(url, headers = {
-    'app_id': oxford_app_id, 'app_key': oxford_app_key
-  })
-
-  if r.status_code == 404:
-    return json.dumps({})
-
-  # todo error check this
-  # todo parts of speech
-  synonyms = r.json()['results'][0]['lexicalEntries'][0]['entries'][0]['senses'][0]['synonyms'][:5]
-  synonyms = list(map(lambda x: x['text'], synonyms))
-
-  return synonyms
+  return dictionary_api.synonym(word)
 
 @app.route('/rhyme', methods=['POST'])
 def rhyme():
