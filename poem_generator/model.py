@@ -153,20 +153,13 @@ class WordModel:
         if primer is None:
             primer = get_random_word(self.vocab)
 
-        primer_clean = preprocess(primer, self.vocab)
-        print primer_clean
-        primer_is = [self.vocab.index(word) for word in primer_clean.split(' ')]
-        print primer_is
+        primer_is = preprocess(primer, self.vocab)
 
         feed_dict = {self.inputs: np.array([primer_is]),
                      self.keep_prob: 1}
         gen_seq_is = self.sess.run(tf.squeeze(self.gen_seq), feed_dict=feed_dict)
 
-        print gen_seq_is
-        gen_seq = map(lambda i: self.vocab[i], gen_seq_is)
-
-        gen_text = ' '.join(gen_seq)
-        gen_text = postprocess(gen_text)
+        gen_text = postprocess(gen_seq_is, self.vocab)
         print gen_text
 
         if save_path is not None:

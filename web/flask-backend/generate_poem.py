@@ -1,17 +1,4 @@
-import requests
-
-from poem_generator.utils.data_processing import preprocess, postprocess, get_random_word
-
-def test_flask_client(x):
-    URL = "http://localhost:5000/model_prediction"
-
-    s = pickle.dumps({"x":x}, protocol=0)
-
-    DATA = {"model_name": "default",
-            "input": requests.utils.quote(s)}
-
-    r = requests.get(URL, data=DATA)
-    return r.json()
+from utils.data_processing import preprocess, postprocess, get_random_word
 
 def generate_poem_suggestion(primer, vocab):
     """
