@@ -265,12 +265,15 @@ def img_input_queue(img_paths,
 def sample(probs):
     """
     Equivalent of np.random.choice of index with weighted probabilities in tensorflow.
-    :param word_probs:
-    :return:
+
+    :param probs: A batch of probability vectors to sample from.
+
+    :return: A sampled
     """
     # https://stackoverflow.com/a/41124526/1827383
-    # [0][0] part is here bc multinomial expects a row of probabilities for each
-    # element of the batch and also has another dimension for the number of samples.
-    samples = tf.multinomial(tf.log([probs]), 1)
-    sampled_i = tf.cast(samples[0][0], tf.int32)
-    return sampled_i
+    # multinomial expects a row of probabilities for each element of the batch and also has another
+    # dimension for the number of samples.
+
+    samples = tf.multinomial(tf.log(probs), 1)
+    sampled_is = tf.cast(samples, tf.int32)
+    return sampled_is

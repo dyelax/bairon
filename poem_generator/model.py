@@ -55,13 +55,15 @@ class WordModel:
             with tf.name_scope('Inference'):
                 # Create the generated sequence tensor as a batch of size 1, and the primer input
                 # sequence length + the generated sequence length
-                primer_len = self.inputs.get_shape()[1]
                 self.gen_seq = self.inputs
 
                 # We already generated the first new word in the process of setting the state from
                 # the primer input
-                pred_word = sample(probs)
-                tf.concat([self.gen_seq, tf.reshape(pred_word, [1, 1])], axis=1)
+                if self.args.argmax:
+                    pred_word = tf.cast(tf.argmax(probs[0]), tf.int32)
+                else:
+                    pred_word = sample(probs)[0][-1]
+                self.gen_seq = tf.concat([self.gen_seq, tf.reshape(pred_word, [1, 1])], axis=1)
 
                 def gen_next_word(i, gen_seq, state):
                     """
@@ -73,8 +75,12 @@ class WordModel:
                     :param state:
                     :return:
                     """
+                    print gen_seq
                     _, probs, state = self._compute(gen_seq, initial_state=state)
-                    pred_word = sample(tf.squeeze(probs))
+                    if self.args.argmax:
+                        pred_word = tf.cast(tf.argmax(probs[0]), tf.int32)
+                    else:
+                        pred_word = sample(probs)[0][-1]
                     gen_seq = tf.concat([gen_seq, tf.reshape(pred_word, [1, 1])], axis=1)
 
                     return i + 1, gen_seq, state
@@ -82,10 +88,8 @@ class WordModel:
                 # The run condition of the loop
                 cond = lambda i, gen_seq, state: i < self.args.max_gen_len
 
-                state_shapes = tuple([tf.TensorShape([None, self.args.cell_size]) for layer_state in state])
-                print state_shapes
+                state_shapes = tuple([tf.TensorShape([None, self.args.cell_size]) for _ in state])
                 sis = (tf.TensorShape([]), tf.TensorShape([None, None]), state_shapes)
-                print sis
                 _, self.gen_seq, state = tf.while_loop(cond, gen_next_word,
                                                   loop_vars=(1, self.gen_seq, state),
                                                   shape_invariants=sis)
@@ -133,7 +137,7 @@ class WordModel:
                                           [-1, self.args.cell_size])
 
             logits = tf.matmul(gru_outputs_flat, self.ws) + self.bs
-            probs = tf.squeeze(tf.nn.softmax(logits))
+            probs = tf.nn.softmax(logits)
 
         return logits, probs, state
 
@@ -150,21 +154,28 @@ class WordModel:
             primer = np.random.choice(self.vocab)
 
         primer_clean = unkify(clean_string(primer), self.vocab)
+        print primer_clean
         primer_is = [self.vocab.index(word) for word in primer_clean.split(' ')]
+        print primer_is
 
         # Initialize state with primer
         feed_dict = {self.inputs: np.array([primer_is]),
                      self.keep_prob: 1}
 
         gen_seq_is = self.sess.run(tf.squeeze(self.gen_seq), feed_dict=feed_dict)
+
+        print 'shape'
+        print gen_seq_is.shape
+        print gen_seq_is
         gen_seq = map(lambda i: self.vocab[i], gen_seq_is)
 
-        gen_seq = postprocess(gen_seq)
-        print gen_seq
+        gen_text = ' '.join(gen_seq)
+        gen_text = postprocess(gen_text)
+        print gen_text
 
-        if save_path is not None:
-            with open(save_path, 'w') as f:
-                f.write(gen_seq)
+        # if save_path is not None:
+        #     with open(save_path, 'w') as f:
+        #         f.write(gen_text)
 
     def train_step(self, inputs, targets):
         """
