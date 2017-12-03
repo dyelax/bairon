@@ -17,6 +17,27 @@ class App extends Component {
     };
   };
 
+  componentDidMount() {
+    console.log('component mounted.')
+    var poem = "Let us go, then, you and I / When the evening is spread out against the sky / Like a patient etherized upon a table."
+
+    fetch('http://127.0.0.1:5000/everything', {  
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        poem: poem
+      })
+    })
+    .then(response => {
+      console.log(response.json())
+    })
+    .then(responseJson => {console.log(responseJson)})
+    .catch(error => {console.log(error)});
+  }
+
   onPoemTitleChange = (newTitle, index) => {
     var poems = this.state.poems;
     poems[index].title = newTitle;
