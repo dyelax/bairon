@@ -39,7 +39,7 @@ class App extends Component {
   onSelectionChange = selection => {
     this.setState({selection: selection});
     this.updateRhyme(selection);
-    this.updateThesaurus(selection);
+    // this.updateThesaurus(selection);
   }
 
   addPoem = () => {
@@ -80,12 +80,10 @@ class App extends Component {
 
 
   sleep = (ms) => {
-    console.log('sleeping for ' + ms + ' ms');
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   updateBairon = () => {
-    console.log('updating bairon')
     this.setState({baironLoading: true});
     let then = new Date();
 
@@ -124,28 +122,18 @@ class App extends Component {
     let then = new Date();
     let promise;
 
-    if (word) {
-      promise = fetch('http://127.0.0.1:5000/thesaurus/' + word, {  
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        }
-      });
-    } else {
-      promise = fetch('http://127.0.0.1:5000/thesaurus', {  
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          poem: this.state.poems[this.state.currentPoem].text
-        })
-      });
+    if (!word) {
+      return;
     }
 
-    promise.then(async response => {
+    fetch('http://127.0.0.1:5000/thesaurus/' + word, {  
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    })
+    .then(async response => {
       let now = new Date();
       if (now - then < 1000) {
         await this.sleep(1000);
@@ -153,8 +141,9 @@ class App extends Component {
       return response.json()
     }).then(responseJSON => {
       this.setState({
-        thesaurus: [responseJSON],
-        thesaurusLoading: false
+        thesaurus: responseJSON,
+        thesaurusLoading: false,
+        thesaurusText: ''
       });
     })
     .catch(error => {
@@ -163,6 +152,20 @@ class App extends Component {
         thesaurusLoading: false
       });
     });
+
+
+    // else {
+    //   promise = fetch('http://127.0.0.1:5000/thesaurus', {  
+    //     method: 'POST',
+    //     headers: {
+    //       'Accept': 'application/json',
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({
+    //       poem: this.state.poems[this.state.currentPoem].text
+    //     })
+    //   });
+    // }
   };
 
   updateRhyme = (word) => {
@@ -170,44 +173,38 @@ class App extends Component {
     let then = new Date();
     let promise;
 
-    if (word) {
-      promise = fetch('http://127.0.0.1:5000/rhyme/' + word, {  
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        }
-      });
-    } else {
-      promise = fetch('http://127.0.0.1:5000/rhyme', {  
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          poem: this.state.poems[this.state.currentPoem].text
-        })
-      });
+    if (!word) {
+      return;
     }
 
-    promise.then(async response => {
+    fetch('http://127.0.0.1:5000/rhyme/' + word, {  
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    })
+    .then(async response => {
       let now = new Date();
       if (now - then > 1000) {
         await this.sleep(1000);
       }
       return response.json()
     }).then(responseJSON => {
+      console.log(responseJSON);
       this.setState({
-        rhyme: [responseJSON],
-        rhymeLoading: false
+        rhyme: responseJSON,
+        rhymeLoading: false,
+        rhymeText: ''
       });
     })
     .catch(error => {
-      this.setState({
-        rhymeText: 'Oops, there was a problem accessing the service. Try again?',
-        rhymeLoading: false
-      });
+      if (error) {
+        this.setState({
+          rhymeText: 'Oops, there was a problem accessing the service. Try again?',
+          rhymeLoading: false
+        });
+      }
     });
   };
 

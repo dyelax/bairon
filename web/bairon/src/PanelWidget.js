@@ -16,16 +16,16 @@ class PanelWidget extends Component {
           {this.props.text}
         </p>}
 
+        {!this.props.loading && this.props.keyValuesData &&
+          <KeyValuesLines data={this.props.keyValuesData}/>
+        }
+
         {this.props.actionFunction && this.props.actionText &&
           <button 
             onClick={this.props.actionFunction}
             className="widget-button">
             {this.props.actionText}
           </button>
-        }
-
-        {this.props.keyValuesData && 
-          <KeyValuesLines data={this.props.keyValuesData}/>
         }
 
         {this.props.searchLink && 

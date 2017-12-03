@@ -41,7 +41,9 @@ def thesaurus():
 
 @app.route('/thesaurus/<word>', methods=['GET'])
 def thesaurus_word(word):
-  return json.dumps(thesaurus_helper(word))
+  result = {}
+  result[word] = thesaurus_helper(word)
+  return json.dumps(result)
 
 def thesaurus_helper(word):
   url = 'https://od-api.oxforddictionaries.com:443/api/v1/entries/en/' + \
@@ -82,7 +84,9 @@ def rhyme():
 
 @app.route('/rhyme/<word>', methods=['GET'])
 def rhyme_word(word):
-  return json.dumps(rhyme_helper(word))
+  result = {}
+  result[word] = rhyme_helper(word)
+  return json.dumps(result)
 
 def rhyme_helper(word):
   rhymes = datamuse_api.words(rel_rhy=word, max=5)
