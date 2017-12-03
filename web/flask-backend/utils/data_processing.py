@@ -5,8 +5,19 @@ import random
 from string import punctuation
 from glob import glob
 from collections import Counter
+from pickle import Unpickler
 
 UNK_TOKEN = '*UNK*'
+
+def get_vocab():
+    print 'Loading vocab...'
+    with open('data_reader.pkl', 'rb') as f:
+        data_reader = Unpickler(f).load()
+        vocab = data_reader.get_vocab()
+
+        print 'Loaded!'
+
+        return vocab
 
 def unkify(string, vocab):
     """

@@ -3,6 +3,9 @@ import re, string, json, requests, random
 from flask_cors import CORS
 from datamuse import datamuse
 
+from generate_poem import generate_poem_suggestion
+from utils.data_processing import get_vocab
+
 app = Flask(__name__)
 app.config.from_envvar('BAIRON_SETTINGS')
 CORS(app)
@@ -11,13 +14,18 @@ oxford_app_id = 'f17ea4d6'
 oxford_app_key = app.config['OXFORD_APP_KEY']
 language = 'en'
 datamuse_api = datamuse.Datamuse()
+vocab = get_vocab()
 
 @app.route('/bairon', methods=['POST'])
 def bairon():
   body = request.get_json()
   if not body['poem'] or body['poem'] == '':
-    return json.dumps("Not implemented yet! (random seed)")
-  return json.dumps("Not implemented yet! (seed provided)")
+    primer = None
+  else:
+    primer = body['poem'].encode("utf8")
+
+  gen_poem = generate_poem_suggestion(primer, vocab)
+  return json.dumps(gen_poem)
 
 @app.route('/thesaurus', methods=['POST'])
 def thesaurus():

@@ -1,7 +1,7 @@
 from pickle import Pickler, Unpickler
 from os.path import exists
 
-from utils.cli import parse_args
+from utils.cli import model_args
 from model import WordModel
 from utils.data_processing import DataReader
 
@@ -37,6 +37,6 @@ def run(args):
 
 
 if __name__ == '__main__':
-    args = parse_args()
+    args = model_args()
 
     run(args)

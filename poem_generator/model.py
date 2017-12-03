@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 import os
 
-from utils.data_processing import unkify, clean_string, postprocess
+from utils.data_processing import preprocess, postprocess, get_random_word
 from utils.tfultils import sample
 
 class WordModel:
@@ -151,9 +151,9 @@ class WordModel:
         :return: A sequence of generated text.
         """
         if primer is None:
-            primer = np.random.choice(self.vocab)
+            primer = get_random_word(self.vocab)
 
-        primer_clean = unkify(clean_string(primer), self.vocab)
+        primer_clean = preprocess(primer, self.vocab)
         print primer_clean
         primer_is = [self.vocab.index(word) for word in primer_clean.split(' ')]
         print primer_is
