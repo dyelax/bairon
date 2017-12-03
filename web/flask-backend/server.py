@@ -1,6 +1,7 @@
 from flask import Flask, request
 import re, string, json, requests, random
 from flask_cors import CORS
+from datamuse import datamuse
 
 app = Flask(__name__)
 app.config.from_envvar('BAIRON_SETTINGS')
@@ -9,6 +10,7 @@ CORS(app)
 oxford_app_id = 'f17ea4d6'
 oxford_app_key = app.config['OXFORD_APP_KEY']
 language = 'en'
+datamuse_api = datamuse.Datamuse()
 
 @app.route('/everything', methods=['POST'])
 def everything():
@@ -65,6 +67,7 @@ def thesaurus_word(word):
 
 def rhyme(poem):
   poem = split_poem_into_words(poem)
+  print(poem)
   length = len(poem)
 
   tries = 0
@@ -79,7 +82,9 @@ def rhyme(poem):
   return []
 
 def rhyme_word(word):
-  return 'Not implemented yet'
+  print('here')
+  print(word)
+  return datamuse_api.words(rel_rhy=word, max=5)
 
 def split_poem_into_words(poem):
   poem = poem.split()

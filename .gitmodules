@@ -1,0 +1,3 @@
+[submodule "web/flask-backend/python-datamuse"]
+	path = web/flask-backend/python-datamuse
+	url = https://github.com/margaret/python-datamuse.git
