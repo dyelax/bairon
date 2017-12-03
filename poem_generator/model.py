@@ -74,7 +74,7 @@ class WordModel:
                     :param state:
                     :return:
                     """
-                    _, state = self._compute(gen_seq, initial_state=state)
+                    logits, state = self._compute(gen_seq, initial_state=state)
                     if self.args.argmax:
                         pred_word = tf.cast(tf.argmax(logits[-1]), tf.int32)
                     else:
