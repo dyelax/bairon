@@ -30,11 +30,12 @@ def main(args):
     builder = tf.saved_model.builder.SavedModelBuilder(export_dir)
 
     inputs_tensor_info = tf.saved_model.utils.build_tensor_info(model.inputs)
+    keep_prob_tensor_info = tf.saved_model.utils.build_tensor_info(model.keep_prob)
     outputs_tensor_info = tf.saved_model.utils.build_tensor_info(model.gen_seq)
 
     prediction_signature = (
         tf.saved_model.signature_def_utils.build_signature_def(
-            inputs={'inputs': inputs_tensor_info},
+            inputs={'inputs': inputs_tensor_info, 'keep_prob': keep_prob_tensor_info},
             outputs={'outputs': outputs_tensor_info},
             method_name=tf.saved_model.signature_constants.PREDICT_METHOD_NAME
         )

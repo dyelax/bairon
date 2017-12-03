@@ -89,7 +89,7 @@ def preprocess(txt, vocab):
     """
     clean_txt = unkify(clean_string(txt), vocab)
     words = clean_txt.split(' ')
-    word_is = np.array([vocab.index(word) for word in words])
+    word_is = np.array([vocab.index(word) for word in words if word != ''])
     return word_is
 
 
