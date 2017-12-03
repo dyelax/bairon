@@ -4,6 +4,7 @@ import Logo from './Logo';
 import BaironPanel from './BaironPanel';
 
 import './style/App.css';
+import './style/dark.css';
 
 class App extends Component {
   constructor(props) {
@@ -37,9 +38,12 @@ class App extends Component {
   };
 
   onSelectionChange = selection => {
+    selection = selection.split(' ')[0];
     this.setState({selection: selection});
-    this.updateRhyme(selection);
-    this.updateThesaurus(selection);
+    if (selection !== '') {
+      this.updateRhyme(selection);
+      this.updateThesaurus(selection);
+    }
   }
 
   addPoem = () => {
@@ -84,7 +88,6 @@ class App extends Component {
   }
 
   updateBairon = () => {
-    console.log('updating bairon')
     this.setState({baironLoading: true});
     let then = new Date();
 
@@ -98,10 +101,10 @@ class App extends Component {
         poem: this.state.poems[this.state.currentPoem].text
       })
     })
-    .then(response => {
+    .then(async response => {
       let now = new Date();
-      if (now - then > 1000) {
-        this.sleep(1000);
+      if (now - then < 1000) {
+        await this.sleep(1000);
       }
       return response.json()
     }).then(responseJSON => {
@@ -123,37 +126,28 @@ class App extends Component {
     let then = new Date();
     let promise;
 
-    if (word) {
-      promise = fetch('http://127.0.0.1:5000/thesaurus/' + word, {  
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        }
-      });
-    } else {
-      promise = fetch('http://127.0.0.1:5000/thesaurus', {  
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          poem: this.state.poems[this.state.currentPoem].text
-        })
-      });
+    if (!word) {
+      return;
     }
 
-    promise.then(response => {
+    fetch('http://127.0.0.1:5000/thesaurus/' + word, {  
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    })
+    .then(async response => {
       let now = new Date();
-      if (now - then > 1000) {
-        this.sleep(1000);
+      if (now - then < 1000) {
+        await this.sleep(1000);
       }
       return response.json()
     }).then(responseJSON => {
       this.setState({
-        thesaurus: [responseJSON],
-        thesaurusLoading: false
+        thesaurus: responseJSON,
+        thesaurusLoading: false,
+        thesaurusText: ''
       });
     })
     .catch(error => {
@@ -162,6 +156,20 @@ class App extends Component {
         thesaurusLoading: false
       });
     });
+
+
+    // else {
+    //   promise = fetch('http://127.0.0.1:5000/thesaurus', {  
+    //     method: 'POST',
+    //     headers: {
+    //       'Accept': 'application/json',
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({
+    //       poem: this.state.poems[this.state.currentPoem].text
+    //     })
+    //   });
+    // }
   };
 
   updateRhyme = (word) => {
@@ -169,44 +177,38 @@ class App extends Component {
     let then = new Date();
     let promise;
 
-    if (word) {
-      promise = fetch('http://127.0.0.1:5000/rhyme/' + word, {  
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        }
-      });
-    } else {
-      promise = fetch('http://127.0.0.1:5000/rhyme', {  
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          poem: this.state.poems[this.state.currentPoem].text
-        })
-      });
+    if (!word) {
+      return;
     }
 
-    promise.then(response => {
+    fetch('http://127.0.0.1:5000/rhyme/' + word, {  
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    })
+    .then(async response => {
       let now = new Date();
       if (now - then > 1000) {
-        this.sleep(1000);
+        await this.sleep(1000);
       }
       return response.json()
     }).then(responseJSON => {
+      console.log(responseJSON);
       this.setState({
-        rhyme: [responseJSON],
-        rhymeLoading: false
+        rhyme: responseJSON,
+        rhymeLoading: false,
+        rhymeText: ''
       });
     })
     .catch(error => {
-      this.setState({
-        rhymeText: 'Oops, there was a problem accessing the service. Try again?',
-        rhymeLoading: false
-      });
+      if (error) {
+        this.setState({
+          rhymeText: 'Oops, there was a problem accessing the service. Try again?',
+          rhymeLoading: false
+        });
+      }
     });
   };
 
