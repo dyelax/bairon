@@ -16,7 +16,8 @@ class App extends Component {
       currentPoem: 0,
       bairon: 'Start typing to seed the generator!',
       thesaurus: {},
-      rhyme: {}
+      rhyme: {},
+      selection: ''
     };
   };
 
@@ -31,9 +32,15 @@ class App extends Component {
     poems[index].text = newText;
     this.setState({poems: poems});
     this.updateBairon();
-    this.updateThesaurus();
-    this.updateRhyme();
+    // this.updateThesaurus();
+    // this.updateRhyme();
   };
+
+  onSelectionChange = selection => {
+    this.setState({selection: selection});
+    this.updateRhyme(selection);
+    this.updateThesaurus(selection);
+  }
 
   addPoem = () => {
     var poems = this.state.poems;
@@ -100,20 +107,32 @@ class App extends Component {
     });
   };
 
-  updateThesaurus = () => {
+  updateThesaurus = (word) => {
     this.setState({thesaurusLoading: true});
-    console.log('updating thesaurus')
-    fetch('http://127.0.0.1:5000/thesaurus', {  
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        poem: this.state.poems[this.state.currentPoem].text
-      })
-    })
-    .then(response => {
+    let promise;
+
+    if (word) {
+      promise = fetch('http://127.0.0.1:5000/thesaurus/' + word, {  
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        }
+      });
+    } else {
+      promise = fetch('http://127.0.0.1:5000/thesaurus', {  
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          poem: this.state.poems[this.state.currentPoem].text
+        })
+      });
+    }
+
+    promise.then(response => {
       return response.json()
     }).then(responseJSON => {
       this.setState({
@@ -129,20 +148,32 @@ class App extends Component {
     });
   };
 
-  updateRhyme = () => {
+  updateRhyme = (word) => {
     this.setState({rhymeLoading: true});
-    console.log('updating rhyme')
-    fetch('http://127.0.0.1:5000/rhyme', {  
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        poem: this.state.poems[this.state.currentPoem].text
-      })
-    })
-    .then(response => {
+    let promise;
+
+    if (word) {
+      promise = fetch('http://127.0.0.1:5000/rhyme/' + word, {  
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        }
+      });
+    } else {
+      promise = fetch('http://127.0.0.1:5000/rhyme', {  
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          poem: this.state.poems[this.state.currentPoem].text
+        })
+      });
+    }
+
+    promise.then(response => {
       return response.json()
     }).then(responseJSON => {
       this.setState({
@@ -170,6 +201,7 @@ class App extends Component {
             onSelectPoem={this.selectPoem}
             onPoemTitleChange={this.onPoemTitleChange}
             onPoemTextChange={this.onPoemTextChange}
+            onSelectionChange={this.onSelectionChange}
             addPoem={this.addPoem}
             deletePoem={this.deletePoem}/>
         </div>

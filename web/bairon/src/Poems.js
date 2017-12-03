@@ -31,7 +31,8 @@ class Poems extends Component {
           title={poem.title}
           text={poem.text}
           onTitleChange={this.props.onPoemTitleChange}
-          onTextChange={this.props.onPoemTextChange}/>
+          onTextChange={this.props.onPoemTextChange}
+          onSelectionChange={this.props.onSelectionChange}/>
       </TabPanel>
     });
 

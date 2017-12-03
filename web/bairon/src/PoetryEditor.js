@@ -9,7 +9,7 @@ class PoetryEditor extends Component {
     }
   };
 
-  onTextChange = (a, b, c) => {
+  onTextChange = a => {
     if (this.props.onTextChange) {
       this.props.onTextChange(a.target.value, this.props.index);
     }
@@ -36,7 +36,8 @@ class PoetryEditor extends Component {
         </div>
         <PoetryInput 
           text={this.props.text}
-          change={this.onTextChange}/>
+          change={this.onTextChange}
+          onSelectionChange={this.props.onSelectionChange}/>
       </div>
     );
   }
