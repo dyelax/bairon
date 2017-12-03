@@ -111,6 +111,36 @@ def postprocess(word_is, vocab):
     return processed_txt
 
 
+def process_suggestion(txt, primer):
+    """
+    Process the text to return as bairon's poetry suggestion.
+
+    :param txt: All the text (primer + generated).
+    :param primer: The original input text from the user.
+
+    :return: The text to display as bairon's poetry suggestion.
+    """
+    bairon_text = txt
+
+    # Replace the beginning with the original primer to reinstate user's punctuation and avoid UNKs
+    bairon_text = primer + bairon_text[len(primer):]
+
+    newline_is = [i for i, x in enumerate(bairon_text) if x == '\n']
+    # Clip off everything before the newline directly before primer text ends.
+    # This will display a bit of the user's input, followed by the generated text.
+    if len(newline_is) > 0:
+        bairon_text = bairon_text[newline_is[0]:]
+
+    # Clip off everything after the last newline (for aesthetics).
+    if len(newline_is) > 1:
+        bairon_text = bairon_text[:newline_is[-1]]
+
+    # Remove UNK tokens (for aesthetics)
+    bairon_text = ' '.join(filter(lambda x: x != UNK_TOKEN, bairon_text.split(' ')))
+
+    return bairon_text
+
+
 def get_random_word(vocab):
     return np.random.choice(vocab)
 
