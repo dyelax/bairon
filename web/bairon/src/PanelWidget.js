@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import KeyValuesLines from './KeyValuesLines';
+import LoadingWidget from './LoadingWidget';
 
 class PanelWidget extends Component {
   render() {
@@ -9,9 +10,11 @@ class PanelWidget extends Component {
           {this.props.title}
         </h1>
 
-        <p className="widget-body">
+        {this.props.loading && <LoadingWidget/>}
+
+        {!this.props.loading && <p className="widget-body">
           {this.props.text}
-        </p>
+        </p>}
 
         {this.props.actionFunction && this.props.actionText &&
           <button 

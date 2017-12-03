@@ -73,6 +73,7 @@ class App extends Component {
 
   updateBairon = () => {
     console.log('updating bairon')
+    this.setState({baironLoading: true});
     fetch('http://127.0.0.1:5000/bairon', {  
       method: 'POST',
       headers: {
@@ -86,12 +87,21 @@ class App extends Component {
     .then(response => {
       return response.json()
     }).then(responseJSON => {
-      this.setState({bairon: responseJSON})
+      this.setState({
+        bairon: responseJSON,
+        baironLoading: false
+      })
     })
-    .catch(error => {console.log(error)});
+    .catch(error => {
+      this.setState({
+        bairon: 'Oops, there was a problem accessing the service. Try again?',
+        baironLoading: false
+      });
+    });
   };
 
   updateThesaurus = () => {
+    this.setState({thesaurusLoading: true});
     console.log('updating thesaurus')
     fetch('http://127.0.0.1:5000/thesaurus', {  
       method: 'POST',
@@ -106,12 +116,21 @@ class App extends Component {
     .then(response => {
       return response.json()
     }).then(responseJSON => {
-      this.setState({thesaurus: [responseJSON]});
+      this.setState({
+        thesaurus: [responseJSON],
+        thesaurusLoading: false
+      });
     })
-    .catch(error => {console.log(error)});
+    .catch(error => {
+      this.setState({
+        thesaurusText: 'Oops, there was a problem accessing the service. Try again?',
+        thesaurusLoading: false
+      });
+    });
   };
 
   updateRhyme = () => {
+    this.setState({rhymeLoading: true});
     console.log('updating rhyme')
     fetch('http://127.0.0.1:5000/rhyme', {  
       method: 'POST',
@@ -126,9 +145,17 @@ class App extends Component {
     .then(response => {
       return response.json()
     }).then(responseJSON => {
-      this.setState({rhyme: [responseJSON]});
+      this.setState({
+        rhyme: [responseJSON],
+        rhymeLoading: false
+      });
     })
-    .catch(error => {console.log(error)});
+    .catch(error => {
+      this.setState({
+        rhymeText: 'Oops, there was a problem accessing the service. Try again?',
+        rhymeLoading: false
+      });
+    });
   };
 
   render() {
@@ -152,8 +179,13 @@ class App extends Component {
             seed={this.state.poems[this.state.currentPoem] ? this.state.poems[this.state.currentPoem]['text'] : ''}
             updateBairon={this.updateBairon}
             bairon={this.state.bairon}
+            baironLoading={this.state.baironLoading}
             rhyme={this.state.rhyme}
+            rhymeLoading={this.state.rhymeLoading}
+            rhymeText={this.state.rhymeText}
             thesaurus={this.state.thesaurus}
+            thesaurusLoading={this.state.thesaurusLoading}
+            thesaurusText={this.state.thesaurusText}
           />
         </div>
       </div>
