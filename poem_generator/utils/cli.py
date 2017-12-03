@@ -85,7 +85,7 @@ def parse_args():
                         action='store_true')
     parser.add_argument('--max_gen_len',
                         help="The maximum number of words to generate.",
-                        default=100,
+                        default=20,
                         type=int)
     parser.add_argument('--primer',
                         help="The priming text to use for inference. Random if not supplied",

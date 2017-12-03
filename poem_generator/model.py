@@ -32,10 +32,9 @@ class WordModel:
                 self.targets = tf.placeholder(tf.int32, [None, None])
                 self.batch_size = tf.shape(self.inputs)[0]
 
-                # self.initial_state = tf.placeholder(tf.float32, [None, self.args.cell_size])
                 self.keep_prob = tf.placeholder(tf.float32)
 
-                logits, probs, state = self._compute(self.inputs)
+                logits, state = self._compute(self.inputs)
 
             with tf.name_scope('Optimization'):
                 self.loss = tf.reduce_mean(tf.nn.sparse_softmax_cross_entropy_with_logits(
@@ -60,9 +59,9 @@ class WordModel:
                 # We already generated the first new word in the process of setting the state from
                 # the primer input
                 if self.args.argmax:
-                    pred_word = tf.cast(tf.argmax(probs[0]), tf.int32)
+                    pred_word = tf.cast(tf.argmax(logits[-1]), tf.int32)
                 else:
-                    pred_word = sample(probs)[0][-1]
+                    pred_word = sample(logits)[-1][0]
                 self.gen_seq = tf.concat([self.gen_seq, tf.reshape(pred_word, [1, 1])], axis=1)
 
                 def gen_next_word(i, gen_seq, state):
@@ -75,12 +74,11 @@ class WordModel:
                     :param state:
                     :return:
                     """
-                    print gen_seq
-                    _, probs, state = self._compute(gen_seq, initial_state=state)
+                    _, state = self._compute(gen_seq, initial_state=state)
                     if self.args.argmax:
-                        pred_word = tf.cast(tf.argmax(probs[0]), tf.int32)
+                        pred_word = tf.cast(tf.argmax(logits[-1]), tf.int32)
                     else:
-                        pred_word = sample(probs)[0][-1]
+                        pred_word = sample(logits)[-1][0]
                     gen_seq = tf.concat([gen_seq, tf.reshape(pred_word, [1, 1])], axis=1)
 
                     return i + 1, gen_seq, state
@@ -89,10 +87,13 @@ class WordModel:
                 cond = lambda i, gen_seq, state: i < self.args.max_gen_len
 
                 state_shapes = tuple([tf.TensorShape([None, self.args.cell_size]) for _ in state])
-                sis = (tf.TensorShape([]), tf.TensorShape([None, None]), state_shapes)
                 _, self.gen_seq, state = tf.while_loop(cond, gen_next_word,
-                                                  loop_vars=(1, self.gen_seq, state),
-                                                  shape_invariants=sis)
+                                                       loop_vars=(1, self.gen_seq, state),
+                                                       shape_invariants=(
+                                                           tf.TensorShape([]),
+                                                           tf.TensorShape([None, None]),
+                                                           state_shapes)
+                                                       )
 
 
     def _compute(self, inputs, initial_state=None):
@@ -137,9 +138,8 @@ class WordModel:
                                           [-1, self.args.cell_size])
 
             logits = tf.matmul(gru_outputs_flat, self.ws) + self.bs
-            probs = tf.nn.softmax(logits)
 
-        return logits, probs, state
+        return logits, state
 
     def generate(self, primer=None, save_path=None):
         """
@@ -158,14 +158,10 @@ class WordModel:
         primer_is = [self.vocab.index(word) for word in primer_clean.split(' ')]
         print primer_is
 
-        # Initialize state with primer
         feed_dict = {self.inputs: np.array([primer_is]),
                      self.keep_prob: 1}
-
         gen_seq_is = self.sess.run(tf.squeeze(self.gen_seq), feed_dict=feed_dict)
 
-        print 'shape'
-        print gen_seq_is.shape
         print gen_seq_is
         gen_seq = map(lambda i: self.vocab[i], gen_seq_is)
 
@@ -173,9 +169,9 @@ class WordModel:
         gen_text = postprocess(gen_text)
         print gen_text
 
-        # if save_path is not None:
-        #     with open(save_path, 'w') as f:
-        #         f.write(gen_text)
+        if save_path is not None:
+            with open(save_path, 'w') as f:
+                f.write(gen_text)
 
     def train_step(self, inputs, targets):
         """
@@ -197,10 +193,10 @@ class WordModel:
                                              feed_dict=feed_dict)
 
         print 'Step: %d | lr: %f | loss: %f' % (global_step, lr, loss)
-        # if (global_step - 1) % self.args.model_save_freq == 0:
-        #     print 'Saving model...'
-        #     self.saver.save(self.sess, os.path.join(self.args.save_dir, 'model'),
-        #                     global_step=global_step)
+        if (global_step - 1) % self.args.model_save_freq == 0:
+            print 'Saving model...'
+            self.saver.save(self.sess, os.path.join(self.args.save_dir, 'model'),
+                            global_step=global_step)
 
         if (global_step - 1) % self.args.inference_freq == 0:
             self.generate(save_path=os.path.join(self.args.save_dir, str(global_step) + '.txt'))

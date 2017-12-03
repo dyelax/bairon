@@ -262,11 +262,11 @@ def img_input_queue(img_paths,
     return img_batch, label_batch
 
 
-def sample(probs):
+def sample(logits):
     """
-    Equivalent of np.random.choice of index with weighted probabilities in tensorflow.
+    Equivalent of np.random.choice of index with weighted logits in tensorflow.
 
-    :param probs: A batch of probability vectors to sample from.
+    :param logits: A batch of logit vectors to sample from.
 
     :return: A sampled
     """
@@ -274,6 +274,6 @@ def sample(probs):
     # multinomial expects a row of probabilities for each element of the batch and also has another
     # dimension for the number of samples.
 
-    samples = tf.multinomial(tf.log(probs), 1)
+    samples = tf.multinomial(logits, 1)
     sampled_is = tf.cast(samples, tf.int32)
     return sampled_is
