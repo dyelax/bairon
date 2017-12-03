@@ -8,8 +8,11 @@ class Poems extends Component {
 
   render() {
     var deletePoem = this.props.deletePoem;
-    var currentPoem = this.props.currentPoem;
-    var tabTitles = this.props.poems.map((poem, i) => {
+    var poems = this.props.poems;
+    var currentPoem = Math.max(this.props.currentPoem, poems.length - 1);
+    // console.log('rendering Poems component');
+    // console.log(currentPoem);
+    var tabTitles = poems.map((poem, i) => {
       function deletePoemByEvent(e) {
         deletePoem(i)
       };
