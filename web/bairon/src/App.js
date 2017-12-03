@@ -30,9 +30,18 @@ class App extends Component {
 
   onPoemTextChange = (newText, index) => {
     var poems = this.state.poems;
+    var oldText = poems[index].text;
     poems[index].text = newText;
     this.setState({poems: poems});
-    this.updateBairon();
+
+    // If the number of spaces changes, a word has been completed or removed, so we should update
+    // bairon's suggestion
+    var oldSpaces = (oldText.match(/\s/g) || []).length;
+    var newSpaces = (newText.match(/\s/g) || []).length;
+    if (oldSpaces !== newSpaces) {
+        this.updateBairon();
+    }
+
     // this.updateThesaurus();
     // this.updateRhyme();
   };
