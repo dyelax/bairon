@@ -78,9 +78,16 @@ class App extends Component {
     this.setState({currentPoem: index});
   };
 
+
+  sleep = (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
   updateBairon = () => {
     console.log('updating bairon')
     this.setState({baironLoading: true});
+    let then = new Date();
+
     fetch('http://127.0.0.1:5000/bairon', {  
       method: 'POST',
       headers: {
@@ -92,6 +99,10 @@ class App extends Component {
       })
     })
     .then(response => {
+      let now = new Date();
+      if (now - then > 3000) {
+        this.sleep(3000);
+      }
       return response.json()
     }).then(responseJSON => {
       this.setState({
@@ -109,6 +120,7 @@ class App extends Component {
 
   updateThesaurus = (word) => {
     this.setState({thesaurusLoading: true});
+    let then = new Date();
     let promise;
 
     if (word) {
@@ -133,6 +145,10 @@ class App extends Component {
     }
 
     promise.then(response => {
+      let now = new Date();
+      if (now - then > 3000) {
+        this.sleep(3000);
+      }
       return response.json()
     }).then(responseJSON => {
       this.setState({
@@ -150,6 +166,7 @@ class App extends Component {
 
   updateRhyme = (word) => {
     this.setState({rhymeLoading: true});
+    let then = new Date();
     let promise;
 
     if (word) {
@@ -174,6 +191,10 @@ class App extends Component {
     }
 
     promise.then(response => {
+      let now = new Date();
+      if (now - then > 3000) {
+        this.sleep(3000);
+      }
       return response.json()
     }).then(responseJSON => {
       this.setState({
