@@ -1,12 +1,13 @@
 .App {
-  background-color: #fff;
+  /*background-color: #fff;*/
   width: calc(100% - 32px);
   height: calc(100vh - 32px);
   margin: 16px;
 }
 
 .App-left {
-  width: 700px;
+  background-color: #fff;
+  width: 684px;
   height: 100%;
   float: left;
   display: flex;
@@ -14,11 +15,14 @@
 }
 
 .App-right {
+  background-color: #fff;
   width: calc(100% - 700px);
-  height: 100%;
+  min-width: 320px;
+  height: calc(100% - 44px);
   float: right;
   display: flex;
   flex-direction: column;
+  margin-top: 44px;
 }
 
 .Logo {
@@ -157,14 +161,36 @@
   height: auto;
   text-align:center;
   border: 2px solid #5797C3;
+
+  /*-webkit-border-image:
+    -webkit-gradient(linear, 90deg, #5797C3 -20.81%, #A362CD 113.29%) 1 100%;
+  -webkit-border-image: 
+    -webkit-linear-gradient(90deg, #5797C3 -20.81%, #A362CD 113.29%) 1 100%;
+  -moz-border-image:
+    -moz-linear-gradient(90deg, #5797C3 -20.81%, #A362CD 113.29%) 1 100%;  
+  -o-border-image:
+    -o-linear-gradient(90deg, #5797C3 -20.81%, #A362CD 113.29%) 1 100%;*/
+  /*border-image:
+      linear-gradient(to right, black, rgba(0, 0, 0, 0)) 1 100%; */
+
   -webkit-border-radius: 30px;
   -moz-border-radius: 30px;
   border-radius: 30px;
   cursor: pointer;
+
+  -webkit-transition: background 300ms linear;
+  -ms-transition: background 300ms linear;
+  transition: background 300ms fade;
+  -webkit-transition: color 300ms linear;
+  -ms-transition: color 300ms linear;
+  transition: color 300ms fade;
 }
 
 .widget-button:hover{
-  background-color:#5797C3;
+  background: #5797C3;
+  line-height: 54px;
+  border: none;
+  background: linear-gradient(90deg, #5797C3 -20.81%, #A362CD 113.29%);
   color: white;
 }
 

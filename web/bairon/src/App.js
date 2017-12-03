@@ -106,8 +106,7 @@ class App extends Component {
     .then(response => {
       return response.json()
     }).then(responseJSON => {
-      var newThesaurus = this.joinObjects(this.state.thesaurus, responseJSON);
-      this.setState({thesaurus: newThesaurus});
+      this.setState({thesaurus: [responseJSON]});
     })
     .catch(error => {console.log(error)});
   };
@@ -127,17 +126,9 @@ class App extends Component {
     .then(response => {
       return response.json()
     }).then(responseJSON => {
-      var newRhyme = this.joinObjects(this.state.rhyme, responseJSON);
-      this.setState({rhyme: newRhyme});
+      this.setState({rhyme: [responseJSON]});
     })
     .catch(error => {console.log(error)});
-  };
-
-  joinObjects = (a, b) => {
-    var result = {};
-    Object.keys(a).forEach((key) => result[key] = a[key]);
-    Object.keys(b).forEach((key) => result[key] = b[key]);
-    return result
   };
 
   render() {

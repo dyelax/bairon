@@ -4,16 +4,6 @@ import PanelWidget from './PanelWidget';
 class BaironPanel extends Component {
 
   render() {
-    var rhymeKeyValues = {
-      "night": ["height", "might", "quite"],
-      "day": ["bay", "sway", "pray"]
-    }
-
-    var thesaurusKeyValues = {
-      "rage": ["seethe", "rampage", "roar"],
-      "gentle": ["calm", "delicate", "mellow"]
-    }
-
     return (
       <div className="BaironPanel">
         <PanelWidget 
@@ -23,11 +13,11 @@ class BaironPanel extends Component {
           actionText={'inspire me, bairon'}/>
         <PanelWidget 
           title="thesaurus" 
-          keyValuesData={thesaurusKeyValues}
+          keyValuesData={this.props.thesaurus}
           searchLink="http://www.thesaurus.com/"/>
         <PanelWidget 
           title="rhyme dictionary" 
-          keyValuesData={rhymeKeyValues}
+          keyValuesData={this.props.rhyme}
           searchLink="http://www.rhymezone.com/"/>
       </div>
     );
