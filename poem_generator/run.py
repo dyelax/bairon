@@ -28,8 +28,7 @@ def run(args):
     model = WordModel(args, vocab)
 
     if args.inference:
-        for i in xrange(10):
-            model.generate(primer=args.primer, save_path='save/new2/' + str(i) + '.txt')
+        model.generate(primer=args.primer)
     else:
         global_step = 0
         while global_step < args.max_steps:
