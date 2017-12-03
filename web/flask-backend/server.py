@@ -12,28 +12,19 @@ oxford_app_key = app.config['OXFORD_APP_KEY']
 language = 'en'
 datamuse_api = datamuse.Datamuse()
 
-@app.route('/everything', methods=['POST'])
-def everything():
-  results = {
-    'bairon': '',
-    'thesaurus': {},
-    'rhyme': {}
-  }
+@app.route('/bairon', methods=['POST'])
+def bairon():
+  body = request.get_json()
+  if not body['poem']:
+    return json.dumps("Not implemented yet! (random seed)")
+  return json.dumps("Not implemented yet! (seed provided)")
 
+@app.route('/thesaurus', methods=['POST'])
+def thesaurus():
   poem = request.get_json()['poem']
-
-  results['bairon'] = bairon(poem)
-  results['thesaurus'] = thesaurus(poem)
-  results['rhyme'] = rhyme(poem)
-
-  return json.dumps(results)
-
-def bairon(poem):
   if not poem:
-    return "Not implemented yet! (random seed)"
-  return "Not implemented yet! (seed provided)"
+    return "Please give us a poem"
 
-def thesaurus(poem):
   poem = split_poem_into_words(poem)
   length = len(poem)
 
@@ -41,14 +32,18 @@ def thesaurus(poem):
   while (tries < length):
     i = random.randint(0, length - 1)
     if len(poem[i]) > 3:
-      words = thesaurus_word(poem[i])
+      words = thesaurus_helper(poem[i])
       if len(words) > 2:
         results = {}
         results[poem[i]] = words
-        return results
-  return []
+        return json.dumps(results)
+  return json.dumps({})
 
+@app.route('/thesaurus/<word>', methods=['GET'])
 def thesaurus_word(word):
+  return json.dumps(thesaurus_helper(word))
+
+def thesaurus_helper(word):
   url = 'https://od-api.oxforddictionaries.com:443/api/v1/entries/en/' + \
     word.lower() + '/synonyms'
   r = requests.get(url, headers = {
@@ -56,7 +51,7 @@ def thesaurus_word(word):
   })
 
   if r.status_code == 404:
-    return []
+    return json.dumps({})
 
   # todo error check this
   # todo parts of speech
@@ -65,26 +60,34 @@ def thesaurus_word(word):
 
   return synonyms
 
-def rhyme(poem):
+@app.route('/rhyme', methods=['POST'])
+def rhyme():
+  poem = request.get_json()['poem']
+  if not poem:
+    return "Please give us a poem"
+
   poem = split_poem_into_words(poem)
-  print(poem)
   length = len(poem)
 
   tries = 0
   while (tries < length):
     i = random.randint(0, length - 1)
     if len(poem[i]) > 3:
-      words = rhyme_word(poem[i])
+      words = rhyme_helper(poem[i])
       if len(words) > 2:
         results = {}
         results[poem[i]] = words
-        return results
-  return []
+        return json.dumps(results)
+  return json.dumps({})
 
+@app.route('/rhyme/<word>', methods=['GET'])
 def rhyme_word(word):
-  print('here')
-  print(word)
-  return datamuse_api.words(rel_rhy=word, max=5)
+  return json.dumps(rhyme_helper(word))
+
+def rhyme_helper(word):
+  rhymes = datamuse_api.words(rel_rhy=word, max=5)
+  rhymes = list(map(lambda x: x['word'], rhymes))
+  return rhymes
 
 def split_poem_into_words(poem):
   poem = poem.split()
