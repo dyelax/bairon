@@ -15,14 +15,14 @@ datamuse_api = datamuse.Datamuse()
 @app.route('/bairon', methods=['POST'])
 def bairon():
   body = request.get_json()
-  if not body['poem']:
+  if not body['poem'] or body['poem'] == '':
     return json.dumps("Not implemented yet! (random seed)")
   return json.dumps("Not implemented yet! (seed provided)")
 
 @app.route('/thesaurus', methods=['POST'])
 def thesaurus():
   poem = request.get_json()['poem']
-  if not poem:
+  if not poem or poem == '':
     return "Please give us a poem"
 
   poem = split_poem_into_words(poem)
@@ -63,7 +63,7 @@ def thesaurus_helper(word):
 @app.route('/rhyme', methods=['POST'])
 def rhyme():
   poem = request.get_json()['poem']
-  if not poem:
+  if not poem  or poem == '':
     return "Please give us a poem"
 
   poem = split_poem_into_words(poem)

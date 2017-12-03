@@ -2,24 +2,6 @@ import React, { Component } from 'react';
 import PanelWidget from './PanelWidget';
 
 class BaironPanel extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      generateRandomly: false
-    }
-  };
-
-  generateIdeas = () => {
-    if (this.props.seed) {
-      return 'Do not go gentle into that good night';
-    } else {
-      return 'Rage, rage against the dying of the light';
-    }
-  }
-
-  setGenerateRandomly = () => {
-    this.setState({generateRandomly: true});
-  }
 
   render() {
     var rhymeKeyValues = {
@@ -36,9 +18,9 @@ class BaironPanel extends Component {
       <div className="BaironPanel">
         <PanelWidget 
           title="bairon's ideas..." 
-          text={this.props.seed || this.state.generateRandomly ? this.generateIdeas() : 'Start typing to seed the generator!'}
-          actionFunction={this.props.seed || this.state.generateRandomly ? this.generateIdeas : this.setGenerateRandomly}
-          actionText={this.props.seed || this.state.generateRandomly ? 'generate new' : 'bairon, inspire me'}/>
+          text={this.props.bairon}
+          actionFunction={this.props.updateBairon}
+          actionText={'inspire me, bairon'}/>
         <PanelWidget 
           title="thesaurus" 
           keyValuesData={thesaurusKeyValues}
