@@ -80,6 +80,7 @@ class App extends Component {
 
 
   sleep = (ms) => {
+    console.log('sleeping for ' + ms + ' ms');
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
@@ -98,10 +99,10 @@ class App extends Component {
         poem: this.state.poems[this.state.currentPoem].text
       })
     })
-    .then(response => {
+    .then(async response => {
       let now = new Date();
-      if (now - then > 1000) {
-        this.sleep(1000);
+      if (now - then < 1000) {
+        await this.sleep(1000);
       }
       return response.json()
     }).then(responseJSON => {
@@ -144,10 +145,10 @@ class App extends Component {
       });
     }
 
-    promise.then(response => {
+    promise.then(async response => {
       let now = new Date();
-      if (now - then > 1000) {
-        this.sleep(1000);
+      if (now - then < 1000) {
+        await this.sleep(1000);
       }
       return response.json()
     }).then(responseJSON => {
@@ -190,10 +191,10 @@ class App extends Component {
       });
     }
 
-    promise.then(response => {
+    promise.then(async response => {
       let now = new Date();
       if (now - then > 1000) {
-        this.sleep(1000);
+        await this.sleep(1000);
       }
       return response.json()
     }).then(responseJSON => {
