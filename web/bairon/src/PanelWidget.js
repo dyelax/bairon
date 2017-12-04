@@ -13,7 +13,7 @@ class PanelWidget extends Component {
         {this.props.loading && <LoadingWidget/>}
 
         {!this.props.loading && <p className="widget-body"
-        dangerouslySetInnerHTML={{__html: this.props.text && this.props.text.replace('\n', '<br />')}}>
+        dangerouslySetInnerHTML={{__html: this.props.text && this.props.text.replace(/\n/g, '<br/>')}}>
         </p>}
 
         {!this.props.loading && this.props.keyValuesData &&

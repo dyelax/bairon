@@ -35,14 +35,15 @@ def generate_poem_suggestion(primer, vocab):
     result = stub.Predict(request, 60)
 
     outputs = np.array(result.outputs['outputs'].int_val)
-    print 'OUTPUTZ'
-    print outputs
+    new_outputs = outputs[len(inputs[0]):]
 
     # Postprocess outputs to get generated text
-    gen_text = postprocess(outputs, vocab)
+    gen_text = postprocess(new_outputs, vocab)
+    print gen_text
 
     # Process text to display in the UI
-    # bairon_text = process_suggestion(gen_text, primer)
-    bairon_text = gen_text
+    bairon_text = process_suggestion(gen_text, primer)
+    print bairon_text
+    # bairon_text = gen_text
 
     return bairon_text
