@@ -8,17 +8,23 @@ from collections import Counter
 from pickle import Unpickler
 
 UNK_TOKEN = '*UNK*'
-
+DATA_DIR = '../../poem_generator/data/poetryDB/txt'
 
 def get_vocab():
-    print 'Loading vocab...'
-    with open('data_reader.pkl', 'rb') as f:
-        data_reader = Unpickler(f).load()
+    if os.path.exists(DATA_DIR):
+        print 'Loading vocab...'
+        with open('data_reader.pkl', 'rb') as f:
+            data_reader = Unpickler(f).load()
+            vocab = data_reader.get_vocab()
+
+            print 'Loaded!'
+    else:
+        print 'Creating data reader...'
+        data_reader = DataReader(DATA_DIR)
+
         vocab = data_reader.get_vocab()
 
-        print 'Loaded!'
-
-        return vocab
+    return vocab
 
 
 def unkify(string, vocab):
